@@ -6,9 +6,11 @@ uses
   System.SysUtils,
   Winapi.Windows,
   Web.WebReq,
-  ufmApplication in 'ufmApplication.pas' {frmApplication} ,
+  ufmApplication in 'ufmApplication.pas' {frmApplication},
   uConsts in 'uConsts.pas',
-  ufmService in 'ufmService.pas' {DepServer2Service: TService};
+  ufmService in 'ufmService.pas' {DepServer2Service: TService},
+  uwmWebModule in 'uwmWebModule.pas' {wmWebModule: TWebModule},
+  uDepServer in 'uDepServer.pas';
 
 {$R *.res}
 
@@ -23,13 +25,18 @@ begin
   FindCmdLineSwitch('InstanceID', InstancePostfix);
   IsGuiApp := FindCmdLineSwitch('GUI');
 
+  if WebRequestHandler <> nil then
+    WebRequestHandler.WebModuleClass := WebModuleClass;
+
+  TDepServer.Init; // Создание экземпляра и инициализация
+
   if IsGuiApp then
   begin
     FreeAndNil(Vcl.SvcMgr.Application);
 
     Vcl.Forms.Application.Initialize;
     Vcl.Forms.Application.CreateForm(TfrmApplication, frmApplication);
-    Vcl.Forms.Application.Run;
+  Vcl.Forms.Application.Run;
   end
   else
   begin
