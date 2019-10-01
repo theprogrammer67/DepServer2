@@ -10,7 +10,10 @@ uses
   uConsts in 'uConsts.pas',
   ufmService in 'ufmService.pas' {DepServer2Service: TService},
   uwmWebModule in 'uwmWebModule.pas' {wmWebModule: TWebModule},
-  uDepServer in 'uDepServer.pas';
+  uDepServer in 'uDepServer.pas',
+  uRequestHandler in 'uRequestHandler.pas',
+  uCommonSvrTypes in 'uCommonSvrTypes.pas',
+  uCommonTypes in '..\Common\uCommonTypes.pas';
 
 {$R *.res}
 

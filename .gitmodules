@@ -1,0 +1,3 @@
+[submodule "lib/XSuperJSON"]
+	path = lib/XSuperJSON
+	url = ../../../lib/XSuperJSON.git
