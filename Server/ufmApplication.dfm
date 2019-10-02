@@ -14,4 +14,22 @@ object frmApplication: TfrmApplication
   Position = poScreenCenter
   PixelsPerInch = 120
   TextHeight = 16
+  object btnEnable: TButton
+    Left = 32
+    Top = 32
+    Width = 75
+    Height = 25
+    Caption = 'Enable'
+    TabOrder = 0
+    OnClick = btnEnableClick
+  end
+  object btnDisable: TButton
+    Left = 128
+    Top = 32
+    Width = 75
+    Height = 25
+    Caption = 'Disable'
+    TabOrder = 1
+    OnClick = btnDisableClick
+  end
 end

@@ -119,7 +119,7 @@ begin
 
     LResponse := SO;
     LResponse.S['message'] := Exception(ExceptObject).Message;
-    AResponseData := SO.AsJSON;
+    AResponseData := LResponse.AsJSON;
   end;
 end;
 
