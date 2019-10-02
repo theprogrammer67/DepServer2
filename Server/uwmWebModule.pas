@@ -13,8 +13,8 @@ type
     procedure wmWebModuleWebActionControlAction(Sender: TObject;
       Request: TWebRequest; Response: TWebResponse; var Handled: Boolean);
   private
-//    procedure HandleRequest(Request: TWebRequest; Response: TWebResponse;
-//      var Handled: Boolean);
+    // procedure HandleRequest(Request: TWebRequest; Response: TWebResponse;
+    // var Handled: Boolean);
   public
     { Public declarations }
   end;
@@ -24,37 +24,54 @@ var
 
 implementation
 
+uses uDepServer, uCommonTypes;
+
 { %CLASSGROUP 'Vcl.Controls.TControl' }
 
 {$R *.dfm}
-
-//procedure TwmWebModule.HandleRequest(Request: TWebRequest;
-//  Response: TWebResponse; var Handled: Boolean);
-//var
-//  LReply: string;
-//begin
-//  ReplicationServer.RequestHandler.HandleRequest(Request.Content, LReply,
-//    tpHttp, Request.RemoteAddr);
-//  Response.Content := LReply;
-//  Handled := True;
-//end;
+// procedure TwmWebModule.HandleRequest(Request: TWebRequest;
+// Response: TWebResponse; var Handled: Boolean);
+// var
+// LReply: string;
+// begin
+// ReplicationServer.RequestHandler.HandleRequest(Request.Content, LReply,
+// tpHttp, Request.RemoteAddr);
+// Response.Content := LReply;
+// Handled := True;
+// end;
 
 procedure TwmWebModule.WebModule1DefaultHandlerAction(Sender: TObject;
   Request: TWebRequest; Response: TWebResponse; var Handled: Boolean);
+var
+  LMethod: TRequestMethod;
+  LResponse: string;
 begin
-//  Response.Content := ReplicationServer.GetHtmlServerInfo;
+  case Request.MethodType of
+    mtPut, mtPost:
+      LMethod := rmPut;
+    mtDelete:
+      LMethod := rmDelete;
+  else
+    LMethod := rmGet;
+  end;
+
+  Response.StatusCode := DepServer.RequestHandler.HandleRequest(LMethod,
+    Request.PathInfo, Request.Query, Request.Content, LResponse);
+
+  Response.Content := LResponse;
+  Handled := True;
 end;
 
 procedure TwmWebModule.wmWebModuleWebActionControlAction(Sender: TObject;
   Request: TWebRequest; Response: TWebResponse; var Handled: Boolean);
 begin
-//  HandleRequest(Request, Response, Handled);
+  // HandleRequest(Request, Response, Handled);
 end;
 
 procedure TwmWebModule.wmWebModuleWebActionDataAction(Sender: TObject;
   Request: TWebRequest; Response: TWebResponse; var Handled: Boolean);
 begin
-//  HandleRequest(Request, Response, Handled);
+  // HandleRequest(Request, Response, Handled);
 end;
 
 end.

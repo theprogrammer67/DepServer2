@@ -25,6 +25,7 @@ type
     procedure Disable;
   public
     property Enabled: Boolean read FEnabled write SetEnabled;
+    property RequestHandler: TRequestHandler read FRequestHandler;
   end;
 
   // Singleton
@@ -47,11 +48,19 @@ type
     // FRequestHandler: TRequestHandler;
   end;
 
+function DepServer: TDepServer;
+
 implementation
 
 resourcestring
   RsErrServerStopped = 'Сервер остановлен';
   RsErrServerNotSarted = 'Сервер не запущен';
+
+function DepServer: TDepServer;
+begin
+  Result := TDepServer.GetInstance;
+end;
+
 
   { TDepServer }
 
@@ -75,6 +84,8 @@ end;
 destructor TDepServer.Destroy;
 begin
   Disable;
+
+  inherited;
 end;
 
 class function TDepServer.GetInstance: TDepServer;

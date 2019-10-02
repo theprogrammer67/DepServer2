@@ -36,7 +36,7 @@ type
     property Response : ISuperObject read GetResponse write SetResponse;
   end;
 
-  TDataCmdIntf = class(TObjWrapper<TCustomCmd>, ICustomCmd)
+  TCustomCmdIntf = class(TObjWrapper<TCustomCmd>, ICustomCmd)
   public
     constructor Create(AMethod: TRequestMethod; const APath, AParams, ARequest: string);
   public
@@ -61,7 +61,7 @@ implementation
 
 { TDataCmdIntf }
 
-constructor TDataCmdIntf.Create(AMethod: TRequestMethod; const APath, AParams,
+constructor TCustomCmdIntf.Create(AMethod: TRequestMethod; const APath, AParams,
   ARequest: string);
 begin
   inherited Create(True);
@@ -73,52 +73,52 @@ begin
   FObj.Response := SO;
 end;
 
-function TDataCmdIntf.GetMethod: TRequestMethod;
+function TCustomCmdIntf.GetMethod: TRequestMethod;
 begin
   Result := FObj.Method;
 end;
 
-function TDataCmdIntf.GetParams: TStrings;
+function TCustomCmdIntf.GetParams: TStrings;
 begin
   Result := FObj.Params;
 end;
 
-function TDataCmdIntf.GetPath: string;
+function TCustomCmdIntf.GetPath: string;
 begin
   Result := FObj.Path;
 end;
 
-function TDataCmdIntf.GetRequest: ISuperObject;
+function TCustomCmdIntf.GetRequest: ISuperObject;
 begin
   Result := FObj.Request;
 end;
 
-function TDataCmdIntf.GetResponse: ISuperObject;
+function TCustomCmdIntf.GetResponse: ISuperObject;
 begin
   Result := FObj.Response;
 end;
 
-procedure TDataCmdIntf.SetMethod(AValue: TRequestMethod);
+procedure TCustomCmdIntf.SetMethod(AValue: TRequestMethod);
 begin
   FObj.Method := AValue;
 end;
 
-procedure TDataCmdIntf.SetParams(AValue: TStrings);
+procedure TCustomCmdIntf.SetParams(AValue: TStrings);
 begin
   FObj.Params.Assign(AValue);
 end;
 
-procedure TDataCmdIntf.SetPath(AValue: string);
+procedure TCustomCmdIntf.SetPath(AValue: string);
 begin
   FObj.Path := AValue;
 end;
 
-procedure TDataCmdIntf.SetRequest(AValue: ISuperObject);
+procedure TCustomCmdIntf.SetRequest(AValue: ISuperObject);
 begin
   FObj.Request := AValue;
 end;
 
-procedure TDataCmdIntf.SetResponse(AValue: ISuperObject);
+procedure TCustomCmdIntf.SetResponse(AValue: ISuperObject);
 begin
   FObj.Response := AValue;
 end;

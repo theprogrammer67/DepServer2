@@ -5,7 +5,7 @@ interface
 uses XSuperObject, System.Rtti, System.SysUtils;
 
 type
-  TRequestMethod = (rtGet, rtPut, rtDelete);
+  TRequestMethod = (rmGet, rmPut, rmDelete);
 
   IObjWrapper<T: class> = interface
     ['{9FB289A5-5BCE-4A4E-BC78-8B37E5B4875B}']
