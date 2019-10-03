@@ -2,7 +2,8 @@
 
 interface
 
-uses System.SysUtils, uCommonTypes, uCommonSvrTypes, XSuperObject;
+uses System.Generics.Collections, ArrayHelper, System.SysUtils, uCommonTypes,
+  uCommonSvrTypes, XSuperObject;
 
 const
   ERR_UNPROCESSABLE_ENTITY = 422;
@@ -36,7 +37,7 @@ const
   PATH_DATA = 'data';
 
 resourcestring
-  RsErrInvalidPath = 'Invalid path';
+  RsErrInvalidPath = 'Неверное значение path';
 
 function NormalizePath(const APath: string): string;
 begin
@@ -52,32 +53,16 @@ begin
     Result := Result.Remove(Length(Result), 1);
 end;
 
-function DeletePathItem(const APath: string; AIndex: Integer): string;
+function GetPathArray(const APath: string): TArray<string>;
 var
-  LPos: Integer;
+  LPath: string;
 begin
-  if APath = '' then
-    Exit(APath);
+  SetLength(Result, 0);
+  LPath := NormalizePath(APath);
+  if LPath = '' then
+    Exit;
 
-  LPos := APath.IndexOf('/');
-  if LPos < 0 then
-    Exit('');
-
-  Result := APath.Substring(LPos + 1, Length(APath) - LPos - 1);
-end;
-
-function ComparePathItem(const AText, APath: string; AIndex: Integer): Boolean;
-var
-  LItems: TArray<string>;
-begin
-  if APath = '' then
-    Exit(False);
-
-  LItems := APath.Split(['/']);
-  if (AIndex > High(LItems)) or (AIndex < Low(LItems)) then
-    Exit(False);
-
-  Result := SameText(LItems[AIndex], AText);
+  Result := LPath.Split(['/']);
 end;
 
 { TRequestHandler }
@@ -93,20 +78,26 @@ function TRequestHandler.HandleRequest(ARequestMethod: TRequestMethod;
   out AResponseData: string): Integer;
 var
   LCmd: ICustomCmd;
-  LPath: string;
+  LPath: TArray<string>;
   LResponse: ISuperObject;
+  LBasePath: string;
 begin
   if Pos('favicon.ico', APath) > 0 then
     Exit(HTTP_OK);
 
   try
-    LPath := NormalizePath(APath);
-    LCmd := TCustomCmdIntf.Create(ARequestMethod, DeletePathItem(LPath, 0),
-      AParams, ARequestData);
+    LPath := GetPathArray(APath);
+    if Length(LPath) = 0 then
+      raise EUnprocessableEntity.Create(RsErrInvalidPath);
 
-    if ComparePathItem(PATH_CONTROL, LPath, 0) then
+    LBasePath := LPath[0];
+    TArray.Delete<string>(LPath, 0);
+
+    LCmd := TCustomCmdIntf.Create(ARequestMethod, LPath, AParams, ARequestData);
+
+    if SameText(LBasePath, PATH_CONTROL) then
       FExecCtrlCmd(LCmd)
-    else if ComparePathItem(PATH_DATA, LPath, 0) then
+    else if SameText(LBasePath, PATH_DATA) then
       FExecDataCmd(LCmd)
     else
       raise EUnprocessableEntity.Create(RsErrInvalidPath);

@@ -11,7 +11,7 @@ type
     destructor Destroy; override;
   public
     Method: TRequestMethod;
-    Path: string;
+    Path: TArray<string>;
     Params: TStrings;
     Request:ISuperObject;
     Response:ISuperObject;
@@ -21,8 +21,8 @@ type
     ['{7D8EB6F4-7FC6-4A0E-B699-F9378DC13B0E}']
     function GetMethod: TRequestMethod;
     procedure SetMethod(AValue: TRequestMethod);
-    function GetPath: string;
-    procedure SetPath(AValue: string);
+    function GetPath: TArray<string>;
+    procedure SetPath(AValue: TArray<string>);
     function GetParams: TStrings;
     procedure SetParams(AValue: TStrings);
     function GetRequest: ISuperObject;
@@ -30,7 +30,7 @@ type
     function GetResponse: ISuperObject;
     procedure SetResponse(AValue: ISuperObject);
     property Method : TRequestMethod read GetMethod write SetMethod;
-    property Path : string read GetPath write SetPath;
+    property Path : TArray<string> read GetPath write SetPath;
     property Params : TStrings read GetParams write SetParams;
     property Request : ISuperObject read GetRequest write SetRequest;
     property Response : ISuperObject read GetResponse write SetResponse;
@@ -38,12 +38,12 @@ type
 
   TCustomCmdIntf = class(TObjWrapper<TCustomCmd>, ICustomCmd)
   public
-    constructor Create(AMethod: TRequestMethod; const APath, AParams, ARequest: string);
+    constructor Create(AMethod: TRequestMethod; APAth: TArray<string>; const AParams, ARequest: string);
   public
     function GetMethod: TRequestMethod;
     procedure SetMethod(AValue: TRequestMethod);
-    function GetPath: string;
-    procedure SetPath(AValue: string);
+    function GetPath: TArray<string>;
+    procedure SetPath(AValue: TArray<string>);
     function GetParams: TStrings;
     procedure SetParams(AValue: TStrings);
     function GetRequest: ISuperObject;
@@ -61,7 +61,7 @@ implementation
 
 { TDataCmdIntf }
 
-constructor TCustomCmdIntf.Create(AMethod: TRequestMethod; const APath, AParams,
+constructor TCustomCmdIntf.Create(AMethod: TRequestMethod; APath: TArray<string>; const AParams,
   ARequest: string);
 begin
   inherited Create(True);
@@ -83,7 +83,7 @@ begin
   Result := FObj.Params;
 end;
 
-function TCustomCmdIntf.GetPath: string;
+function TCustomCmdIntf.GetPath: TArray<string>;
 begin
   Result := FObj.Path;
 end;
@@ -108,7 +108,7 @@ begin
   FObj.Params.Assign(AValue);
 end;
 
-procedure TCustomCmdIntf.SetPath(AValue: string);
+procedure TCustomCmdIntf.SetPath(AValue: TArray<string>);
 begin
   FObj.Path := AValue;
 end;

@@ -13,7 +13,10 @@ uses
   uDepServer in 'uDepServer.pas',
   uRequestHandler in 'uRequestHandler.pas',
   uCommonSvrTypes in 'uCommonSvrTypes.pas',
-  uCommonTypes in '..\Common\uCommonTypes.pas';
+  uCommonTypes in '..\Common\uCommonTypes.pas',
+  ArrayHelper in '..\Common\ArrayHelper.pas',
+  XSuperJSON in '..\lib\XSuperJSON\XSuperJSON.pas',
+  XSuperObject in '..\lib\XSuperJSON\XSuperObject.pas';
 
 {$R *.res}
 
@@ -25,6 +28,8 @@ begin
   // Для отображения утечек памяти, если они есть
   ReportMemoryLeaksOnShutdown := True;
 {$ENDIF}
+  SendUnicodeAsChars := True; // XSuperJSON
+
   FindCmdLineSwitch('InstanceID', InstancePostfix);
   IsGuiApp := FindCmdLineSwitch('GUI');
 
