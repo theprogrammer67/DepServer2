@@ -44,7 +44,7 @@ procedure TwmWebModule.WebModule1DefaultHandlerAction(Sender: TObject;
   Request: TWebRequest; Response: TWebResponse; var Handled: Boolean);
 var
   LMethod: TRequestMethod;
-  LResponse: string;
+  LResponse, RequestData: string;
 begin
   case Request.MethodType of
     mtPut, mtPost:
@@ -55,8 +55,13 @@ begin
     LMethod := rmGet;
   end;
 
+  if LMethod = rmPut then
+    RequestData := Request.Content
+  else
+    RequestData := '';
+
   Response.StatusCode := DepServer.RequestHandler.HandleRequest(LMethod,
-    Request.PathInfo, Request.Query, Request.Content, LResponse);
+    Request.PathInfo, Request.Query, RequestData, LResponse);
 
   Response.Content := LResponse;
   Handled := True;

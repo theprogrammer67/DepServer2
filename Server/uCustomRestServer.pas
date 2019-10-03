@@ -3,9 +3,18 @@
 interface
 
 uses System.SysUtils, IdHTTPWebBrokerBridge, IdSocketHandle, uCommonSvrTypes,
-  uRequestHandler, uConsts;
+  uRequestHandler, uConsts, System.Rtti;
 
 type
+  CtrlMethAttribute = class(TCustomAttribute)
+  private
+    FCmdName: string;
+  public
+    constructor Create(const ACmdName: string);
+  public
+    property CmdName: string read FCmdName;
+  end;
+
   TCustomRestServer = class
   private
     FWebServer: TIdHTTPWebBrokerBridge;
@@ -27,11 +36,15 @@ type
   public
     property Enabled: Boolean read FEnabled write SetEnabled;
     property RequestHandler: TRequestHandler read FRequestHandler;
+  public
+    [CtrlMethAttribute('Test')]
+    function Test(Param1, Param2: string): string;
   end;
 
+resourcestring
+  RsErrUnknownCommand = 'Неизвестная команда';
 
 implementation
-
 
 { TCustomRestServer }
 
@@ -88,8 +101,52 @@ begin
 end;
 
 procedure TCustomRestServer.ExecuteControlCmd(ACmd: ICustomCmd);
+var
+  LCtx: TRttiContext;
+  LType: TRttiType;
+  LMethod: TRttiMethod;
+  LAttribute: TCustomAttribute;
+  LFound: Boolean;
+  LArgs: TArray<TValue>;
+  LCmdName: string;
+  I: Integer;
+  LParams: TArray<TRttiParameter>;
+  LResult: TValue;
 begin
-  raise Exception.Create('Under construction');
+  if Length(ACmd.Path) = 0 then
+    raise EUnprocessableEntity.Create(RsErrInvalidPath);
+  // Сначала ищем среди методов
+  LFound := False;
+  LCmdName := ACmd.Path[0];
+
+  LCtx := TRttiContext.Create;
+  try
+    LType := LCtx.GetType(Self.ClassType);
+    for LMethod in LType.GetMethods do
+      for LAttribute in LMethod.GetAttributes do
+        if LAttribute is CtrlMethAttribute then
+          with CtrlMethAttribute(LAttribute) do
+            if SameText(LCmdName, CmdName) then
+            begin
+              LFound := True;
+
+              LParams := LMethod.GetParameters;
+              SetLength(LArgs, Length(LParams));
+              for I := 0 to High(LParams) do
+                LArgs[I] := TValue.From<string>
+                  (ACmd.Params.Values[LParams[I].Name]);
+
+              LResult := LMethod.Invoke(Self, LArgs);
+              ACmd.Response.V['Result'] := LResult.AsVariant;
+
+              Break;
+            end;
+  finally
+    LCtx.Free;
+  end;
+
+  if not LFound then
+    raise Exception.Create(RsErrUnknownCommand);
 end;
 
 procedure TCustomRestServer.ExecuteDataCmd(ACmd: ICustomCmd);
@@ -103,6 +160,18 @@ begin
     Enable
   else
     Disable;
+end;
+
+function TCustomRestServer.Test(Param1, Param2: string): string;
+begin
+  Result := Param1 + '+' + Param2;
+end;
+
+{ CtrlMethAttribute }
+
+constructor CtrlMethAttribute.Create(const ACmdName: string);
+begin
+  FCmdName := ACmdName;
 end;
 
 end.

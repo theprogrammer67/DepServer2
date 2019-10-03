@@ -28,6 +28,9 @@ type
       out AResponseData: string): Integer;
   end;
 
+resourcestring
+  RsErrInvalidPath = 'Неверное значение path';
+
 implementation
 
 
@@ -36,8 +39,6 @@ const
   PATH_CONTROL = 'control';
   PATH_DATA = 'data';
 
-resourcestring
-  RsErrInvalidPath = 'Неверное значение path';
 
 function NormalizePath(const APath: string): string;
 begin
