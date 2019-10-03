@@ -18,11 +18,9 @@ type
     procedure ExecuteDataCmd(ACmd: ICustomCmd);
     procedure ExecuteControlCmd(ACmd: ICustomCmd);
     procedure SetEnabled(const Value: Boolean);
-  protected
-{$HINTS OFF}
-    constructor Create; virtual;
-    destructor Destroy; reintroduce; virtual;
-{$HINTS ON}
+  public
+    constructor Create;
+    destructor Destroy; override;
   public
     procedure Enable;
     procedure Disable;
@@ -36,7 +34,7 @@ type
   strict private
     class var FInstance: TDepServer;
 {$HINTS OFF}
-    constructor Create; override;
+    constructor Create;
     destructor Destroy; override;
     class destructor Destroy;
     // class constructor Create;
