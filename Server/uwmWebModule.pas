@@ -2,7 +2,7 @@
 
 interface
 
-uses System.SysUtils, System.Classes, Web.HTTPApp, Winapi.Windows;
+uses System.Classes, Web.HTTPApp;
 
 type
   TwmWebModule = class(TWebModule)

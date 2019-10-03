@@ -30,7 +30,7 @@ type
 
 implementation
 
-uses System.StrUtils;
+
 
 const
   PATH_CONTROL = 'control';

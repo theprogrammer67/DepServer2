@@ -16,7 +16,8 @@ uses
   uCommonTypes in '..\Common\uCommonTypes.pas',
   ArrayHelper in '..\Common\ArrayHelper.pas',
   XSuperJSON in '..\lib\XSuperJSON\XSuperJSON.pas',
-  XSuperObject in '..\lib\XSuperJSON\XSuperObject.pas';
+  XSuperObject in '..\lib\XSuperJSON\XSuperObject.pas',
+  uCustomRestServer in 'uCustomRestServer.pas';
 
 {$R *.res}
 

@@ -3,8 +3,8 @@
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.SvcMgr, Vcl.Dialogs;
+  Winapi.Windows, System.SysUtils, System.Classes,
+  Vcl.SvcMgr;
 
 type
   TDepServer2Service = class(TService)
