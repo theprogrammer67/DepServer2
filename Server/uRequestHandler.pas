@@ -39,18 +39,17 @@ resourcestring
   RsErrInvalidPath = 'Invalid path';
 
 function NormalizePath(const APath: string): string;
-var
-  LPath: string;
 begin
-  LPath := APath;
+  Result := APath;
   if APath = '' then
     Exit('');
-  if LPath[1] = '/' then
-    LPath.Remove(0, 1);
-  if APath = '' then
+
+  if Result[1] = '/' then
+    Result := Result.Remove(0, 1);
+  if Result = '' then
     Exit('');
-  if LPath[Length(LPath)] = '/' then
-    LPath.Remove(Length(LPath), 1);
+  if Result[Length(Result)] = '/' then
+    Result := Result.Remove(Length(Result), 1);
 end;
 
 function DeletePathItem(const APath: string; AIndex: Integer): string;
@@ -62,12 +61,12 @@ begin
 
   LPos := APath.IndexOf('/');
   if LPos < 0 then
-    Exit(APath);
+    Exit('');
 
   Result := APath.Substring(LPos + 1, Length(APath) - LPos - 1);
 end;
 
-function ComparePathItem(const APath, AText: string; AIndex: Integer): Boolean;
+function ComparePathItem(const AText, APath: string; AIndex: Integer): Boolean;
 var
   LItems: TArray<string>;
 begin
@@ -97,14 +96,17 @@ var
   LPath: string;
   LResponse: ISuperObject;
 begin
+  if Pos('favicon.ico', APath) > 0 then
+    Exit(HTTP_OK);
+
   try
     LPath := NormalizePath(APath);
     LCmd := TCustomCmdIntf.Create(ARequestMethod, DeletePathItem(LPath, 0),
       AParams, ARequestData);
 
-    if ComparePathItem(APath, PATH_CONTROL, 0) then
+    if ComparePathItem(PATH_CONTROL, LPath, 0) then
       FExecCtrlCmd(LCmd)
-    else if ComparePathItem(APath, PATH_DATA, 0) then
+    else if ComparePathItem(PATH_DATA, LPath, 0) then
       FExecDataCmd(LCmd)
     else
       raise EUnprocessableEntity.Create(RsErrInvalidPath);
