@@ -11,9 +11,6 @@ const
   HTTP_OK = 200;
 
 type
-  EUnprocessableEntity = class(Exception);
-  EInternalServerError = class(Exception);
-
   TExecuteCmd = procedure(ACmd: ICustomCmd) of object;
 
   TRequestHandler = class

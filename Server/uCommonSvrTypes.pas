@@ -5,6 +5,9 @@ interface
 uses System.Classes, System.SysUtils, Web.HTTPApp, uCommonTypes, XSuperObject;
 
 type
+  EUnprocessableEntity = class(Exception);
+  EInternalServerError = class(Exception);
+
   TCustomCmd = class
   public
     constructor Create;
@@ -13,8 +16,8 @@ type
     Method: TRequestMethod;
     Path: TArray<string>;
     Params: TStrings;
-    Request:ISuperObject;
-    Response:ISuperObject;
+    Request: ISuperObject;
+    Response: ISuperObject;
   end;
 
   ICustomCmd = interface(IObjWrapper<TCustomCmd>)
@@ -29,16 +32,17 @@ type
     procedure SetRequest(AValue: ISuperObject);
     function GetResponse: ISuperObject;
     procedure SetResponse(AValue: ISuperObject);
-    property Method : TRequestMethod read GetMethod write SetMethod;
-    property Path : TArray<string> read GetPath write SetPath;
-    property Params : TStrings read GetParams write SetParams;
-    property Request : ISuperObject read GetRequest write SetRequest;
-    property Response : ISuperObject read GetResponse write SetResponse;
+    property Method: TRequestMethod read GetMethod write SetMethod;
+    property Path: TArray<string> read GetPath write SetPath;
+    property Params: TStrings read GetParams write SetParams;
+    property Request: ISuperObject read GetRequest write SetRequest;
+    property Response: ISuperObject read GetResponse write SetResponse;
   end;
 
   TCustomCmdIntf = class(TObjWrapper<TCustomCmd>, ICustomCmd)
   public
-    constructor Create(AMethod: TRequestMethod; APAth: TArray<string>; const AParams, ARequest: string);
+    constructor Create(AMethod: TRequestMethod; APAth: TArray<string>;
+      const AParams, ARequest: string);
   public
     function GetMethod: TRequestMethod;
     procedure SetMethod(AValue: TRequestMethod);
@@ -59,18 +63,25 @@ type
 
 implementation
 
-{ TDataCmdIntf }
+resourcestring
+  RsErrWrongJSONString = 'Некорректная строка JSON';
 
-constructor TCustomCmdIntf.Create(AMethod: TRequestMethod; APath: TArray<string>; const AParams,
-  ARequest: string);
+  { TDataCmdIntf }
+
+constructor TCustomCmdIntf.Create(AMethod: TRequestMethod;
+  APAth: TArray<string>; const AParams, ARequest: string);
 begin
   inherited Create(True);
 
   FObj.Method := AMethod;
-  FObj.Path := APath;
+  FObj.Path := APAth;
   ExtractHTTPFields(['&'], [], AParams, FObj.Params);
-  FObj.Request := SO(ARequest);
-  FObj.Response := SO;
+  try
+    FObj.Request := TSuperObject.Create(ARequest);
+  except
+    raise EUnprocessableEntity.Create(RsErrWrongJSONString);
+  end;
+  FObj.Response := TSuperObject.Create;
 end;
 
 function TCustomCmdIntf.GetMethod: TRequestMethod;
@@ -132,7 +143,7 @@ end;
 
 destructor TCustomCmd.Destroy;
 begin
-  FreeAndNil(PArams);
+  FreeAndNil(Params);
   inherited;
 end;
 
