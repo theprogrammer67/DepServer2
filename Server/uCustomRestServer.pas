@@ -39,12 +39,77 @@ type
   public
     [CtrlMethAttribute('Test')]
     function Test(Param1, Param2: string): string;
+    [CtrlMethAttribute('TestInt')]
+    function TestInt(Param1, Param2: Integer): Integer;
   end;
 
 resourcestring
   RsErrUnknownCommand = 'Неизвестная команда';
 
 implementation
+
+uses System.Variants;
+
+function VarToFloatDef(AValue: OleVariant; const ADefault: Extended = 0)
+  : Extended;
+var
+  LValueStr: string;
+begin
+  if (not VarIsNull(AValue)) and (not VarIsEmpty(AValue)) then
+    if VarIsStr(AValue) then
+    begin
+      LValueStr := Trim(VarToStr(AValue));
+      LValueStr := StringReplace(LValueStr, ',',
+        FormatSettings.DecimalSeparator, [rfReplaceAll]);
+      LValueStr := StringReplace(LValueStr, '.',
+        FormatSettings.DecimalSeparator, [rfReplaceAll]);
+      Result := StrToFloatDef(LValueStr, ADefault);
+    end
+    else
+      Result := AValue
+  else
+    Result := ADefault;
+end;
+
+function VarToIntDef(AValue: OleVariant; const ADefault: Integer = 0): Integer;
+var
+  LValueStr: string;
+begin
+  if (not VarIsNull(AValue)) and (not VarIsEmpty(AValue)) then
+    if VarIsStr(AValue) then
+    begin
+      LValueStr := Trim(VarToStr(AValue));
+      Result := StrToIntDef(AValue, ADefault);
+    end
+    else
+      Result := AValue
+  else
+    Result := ADefault;
+end;
+
+function VarToStrDef(AValue: OleVariant; const ADefault: string = ''): string;
+begin
+  if (not VarIsNull(AValue)) and (not VarIsEmpty(AValue)) then
+    Result := VarToStr(AValue)
+  else
+    Result := ADefault;
+end;
+
+function VarToValue(AValue: OleVariant; AKind: TTypeKind): TValue;
+begin
+  case AKind of
+    tkInteger, tkInt64:
+      Result := VarToIntDef(AValue);
+    tkFloat:
+      Result := VarToFloatDef(AValue);
+    tkWChar, tkLString, tkWString, tkString, tkChar, tkUString:
+      Result := VarToStrDef(AValue);
+    tkVariant:
+      Result := TValue.FromVariant(AValue);
+  else
+    raise EConvertError.Create('Cannot convert OleVariant to TValue');
+  end;
+end;
 
 { TCustomRestServer }
 
@@ -132,12 +197,16 @@ begin
 
               LParams := LMethod.GetParameters;
               SetLength(LArgs, Length(LParams));
+
               for I := 0 to High(LParams) do
-                LArgs[I] := TValue.From<string>
-                  (ACmd.Params.Values[LParams[I].Name]);
+                LArgs[I] := VarToValue(ACmd.Params.Values[LParams[I].Name],
+                  LParams[I].ParamType.TypeKind);
 
               LResult := LMethod.Invoke(Self, LArgs);
+
               ACmd.Response.V['Result'] := LResult.AsVariant;
+              for I := 0 to High(LParams) do
+                ACmd.Response.V[LParams[I].Name] := LArgs[I].AsVariant;
 
               Break;
             end;
@@ -160,6 +229,11 @@ begin
     Enable
   else
     Disable;
+end;
+
+function TCustomRestServer.TestInt(Param1, Param2: Integer): Integer;
+begin
+  Result := Param1 + Param2;
 end;
 
 function TCustomRestServer.Test(Param1, Param2: string): string;
