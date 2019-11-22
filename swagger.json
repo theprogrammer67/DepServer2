@@ -1,3 +1,307 @@
 {
-  "swagger" : "2.0"
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Депозитно-дисконтный сервер. Ред. 2",
+    "version" : "2",
+    "title" : "Сервер ДДС",
+    "contact" : {
+      "email" : "stoi@rarus.ru"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags" : [ {
+    "name" : "Управление",
+    "description" : "Управление сервером"
+  }, {
+    "name" : "Карты",
+    "description" : "Операции с данными"
+  } ],
+  "paths" : {
+    "/cards" : {
+      "post" : {
+        "tags" : [ "Карты" ],
+        "summary" : "Добавление новой карты",
+        "operationId" : "addCard",
+        "description" : "Добавление новой карты в БД",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "CardItem",
+          "description" : "Обновляемая карта",
+          "schema" : {
+            "$ref" : "#/definitions/CardItem"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Карта создана"
+          },
+          "400" : {
+            "description" : "Неверные параметры"
+          },
+          "409" : {
+            "description" : "Карта уже существует"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Карты" ],
+        "summary" : "Обновление карты",
+        "operationId" : "updateCard",
+        "description" : "Обновление существующей карты в БД",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "CardItem",
+          "description" : "Обновляемая карта",
+          "schema" : {
+            "$ref" : "#/definitions/CardItem"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Карта обновлена"
+          },
+          "400" : {
+            "description" : "Неверные параметры"
+          },
+          "404" : {
+            "description" : "Карта не найдена"
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "Карты" ],
+        "summary" : "поиск карт",
+        "operationId" : "searchCard",
+        "description" : "Передав соответствующие параметры, вы можете искать карту в БД\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "searchString",
+          "description" : "опциональная строка поиска",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "in" : "query",
+          "name" : "skip",
+          "description" : "число пропускаемых записей для пагинации",
+          "type" : "integer",
+          "format" : "int32",
+          "minimum" : 0
+        }, {
+          "in" : "query",
+          "name" : "limit",
+          "description" : "максимальное количество строк в выдаче",
+          "type" : "integer",
+          "format" : "int32",
+          "minimum" : 0,
+          "maximum" : 50
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Результаты поиска, удовлетворяющие условию",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CardItem"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    },
+    "/cards/{CardId}" : {
+      "get" : {
+        "tags" : [ "Карты" ],
+        "summary" : "Получение карты по ID",
+        "description" : "Возвращает одну карту по её идентификатору",
+        "operationId" : "getCardById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "CardId",
+          "in" : "path",
+          "description" : "ID карты",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ошибок нет",
+            "schema" : {
+              "$ref" : "#/definitions/CardItem"
+            }
+          },
+          "400" : {
+            "description" : "Неверный идентификатор карты"
+          },
+          "404" : {
+            "description" : "Карта не найдена"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "CardItem" : {
+      "type" : "object",
+      "required" : [ "id", "name", "description" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "183167cd-7ceb-476b-abc8-9e9ee139d482"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Тестовая карта"
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "Просто тестовая карта"
+        },
+        "master" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "ef348142-bb9e-11e5-a26b-5404a6b8123f"
+        },
+        "parent" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "95935461-e85a-482c-b7d2-e2a36bffa94d"
+        },
+        "group" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "code" : {
+          "type" : "string",
+          "example" : "1234-5678"
+        },
+        "customer" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "907b8286-fe97-4c33-9a41-d4733222d888"
+        },
+        "balanceflag" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "discountflag" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "blocked" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "blockdescription" : {
+          "type" : "string",
+          "example" : "За давностью лет"
+        },
+        "balance" : {
+          "type" : "number",
+          "format" : "double",
+          "example" : 100.55
+        },
+        "creditmax" : {
+          "type" : "number",
+          "format" : "double",
+          "example" : 1000.55
+        },
+        "actived" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "begindate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2017-07-21T17:32:28Z",
+          "description" : "дата и время активации"
+        },
+        "enddate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2019-07-21T17:32:28Z",
+          "description" : "дата и время деактивации"
+        },
+        "turnover" : {
+          "type" : "number",
+          "format" : "double",
+          "example" : 12345.55,
+          "description" : "оборот по карте"
+        },
+        "lasttransaction" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "79dba956-ab60-4b6a-ba4c-3b2de8243675"
+        },
+        "lasttransactiondate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2019-05-20T17:32:28Z"
+        },
+        "restriction" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "aaf267a3-2854-4b41-9442-8a698446c714"
+        },
+        "unlimitedcredit" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "reportperiodtype" : {
+          "type" : "integer",
+          "example" : 0,
+          "description" : "тип отчётного периода"
+        },
+        "reportperiodnum" : {
+          "type" : "integer",
+          "example" : 1,
+          "description" : "параметр отчётного периода"
+        },
+        "organization" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d2812ead-3188-426c-8149-365d1c05437d"
+        },
+        "password" : {
+          "type" : "string",
+          "example" : "pass"
+        },
+        "coupon" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "phone" : {
+          "type" : "string",
+          "example" : 89037851649
+        },
+        "birthday" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "1967-05-20"
+        },
+        "level" : {
+          "type" : "integer",
+          "example" : 0
+        },
+        "excludereplication" : {
+          "type" : "boolean",
+          "example" : false
+        }
+      }
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "schemes" : [ "https" ],
+  "basePath" : "/theprogrammer67/DepServer2/1.0.0"
 }
