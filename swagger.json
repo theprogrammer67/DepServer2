@@ -223,6 +223,48 @@
           "type" : "string",
           "format" : "uuid",
           "example" : "aaf267a3-2854-4b41-9442-8a698446c714"
+        },
+        "unlimitedcredit" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "reportperiodtype" : {
+          "type" : "integer",
+          "example" : 0
+        },
+        "reportperiodnum" : {
+          "type" : "integer",
+          "example" : 1
+        },
+        "organization" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "d2812ead-3188-426c-8149-365d1c05437d"
+        },
+        "password" : {
+          "type" : "string",
+          "example" : "pass"
+        },
+        "coupon" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "phone" : {
+          "type" : "string",
+          "example" : 89037851649
+        },
+        "birthday" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "1967-05-20"
+        },
+        "level" : {
+          "type" : "integer",
+          "example" : 0
+        },
+        "excludereplication" : {
+          "type" : "boolean",
+          "example" : false
         }
       }
     }
