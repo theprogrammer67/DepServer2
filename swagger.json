@@ -20,7 +20,7 @@
     "description" : "Операции с данными"
   } ],
   "paths" : {
-    "/cards" : {
+    "/data/cards" : {
       "post" : {
         "tags" : [ "Карты" ],
         "summary" : "Добавление новой карты",
