@@ -127,7 +127,7 @@
         }
       }
     },
-    "/cards/{CardId}" : {
+    "/data/cards/{CardId}" : {
       "get" : {
         "tags" : [ "Карты" ],
         "summary" : "Получение карты по ID",
