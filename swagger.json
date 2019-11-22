@@ -25,13 +25,13 @@
         "tags" : [ "Карты" ],
         "summary" : "Добавление новой карты",
         "operationId" : "addCard",
-        "description" : "Добавление новой карты в БД",
+        "description" : "Добавление новой карты/карт в БД",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "body",
           "name" : "CardItems",
-          "description" : "Добавляемые карты",
+          "description" : "Добавляемые карты/карта",
           "schema" : {
             "allOf" : [ {
               "$ref" : "#/definitions/CardItem"
@@ -54,17 +54,21 @@
       },
       "put" : {
         "tags" : [ "Карты" ],
-        "summary" : "Обновление карты",
+        "summary" : "Обновление существующей карты",
         "operationId" : "updateCard",
-        "description" : "Обновление существующей карты в БД",
+        "description" : "Обновление существующей карты/карт в БД",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "body",
           "name" : "CardItem",
-          "description" : "Обновляемая карта",
+          "description" : "Обновляемая карта/карты",
           "schema" : {
-            "$ref" : "#/definitions/CardItem"
+            "allOf" : [ {
+              "$ref" : "#/definitions/CardItem"
+            }, {
+              "$ref" : "#/definitions/CardItems"
+            } ]
           }
         } ],
         "responses" : {
