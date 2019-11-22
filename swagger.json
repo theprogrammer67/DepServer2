@@ -61,7 +61,7 @@
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "body",
-          "name" : "CardItem",
+          "name" : "CardItems",
           "description" : "Обновляемая карта/карты",
           "schema" : {
             "allOf" : [ {
