@@ -209,7 +209,8 @@
         "turnover" : {
           "type" : "number",
           "format" : "double",
-          "example" : 12345.55
+          "example" : 12345.55,
+          "description" : "оборот по карте"
         },
         "lasttransaction" : {
           "type" : "string",
@@ -232,11 +233,13 @@
         },
         "reportperiodtype" : {
           "type" : "integer",
-          "example" : 0
+          "example" : 0,
+          "description" : "тип отчётного периода"
         },
         "reportperiodnum" : {
           "type" : "integer",
-          "example" : 1
+          "example" : 1,
+          "description" : "параметр отчётного периода"
         },
         "organization" : {
           "type" : "string",
