@@ -24,7 +24,7 @@
       "post" : {
         "tags" : [ "Карты" ],
         "summary" : "Добавление новой карты",
-        "operationId" : "addCard",
+        "operationId" : "addCards",
         "description" : "Добавление новой карты/карт в БД",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -61,7 +61,7 @@
       "put" : {
         "tags" : [ "Карты" ],
         "summary" : "Обновление существующей карты",
-        "operationId" : "updateCard",
+        "operationId" : "updateCards",
         "description" : "Обновление существующей карты/карт в БД",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
