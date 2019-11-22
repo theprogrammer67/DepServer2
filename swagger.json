@@ -13,43 +13,84 @@
     }
   },
   "tags" : [ {
-    "name" : "control",
+    "name" : "Управление",
     "description" : "Управление сервером"
   }, {
-    "name" : "data",
+    "name" : "Карты",
     "description" : "Операции с данными"
   } ],
   "paths" : {
-    "/cards" : {
+    "/data/cards" : {
       "post" : {
-        "tags" : [ "data" ],
+        "tags" : [ "Карты" ],
         "summary" : "Добавление новой карты",
-        "operationId" : "addCard",
-        "description" : "Добавление новой карты в БД",
+        "operationId" : "addCards",
+        "description" : "Добавление новой карты/карт в БД",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "body",
-          "name" : "CardItem",
-          "description" : "Добавляемая карта",
+          "name" : "CardItems",
+          "description" : "Добавляемые карты/карта",
           "schema" : {
-            "$ref" : "#/definitions/CardItem"
+            "allOf" : [ {
+              "$ref" : "#/definitions/CardItem"
+            }, {
+              "$ref" : "#/definitions/CardItems"
+            } ]
           }
         } ],
         "responses" : {
           "201" : {
-            "description" : "Карта создана"
+            "description" : "Карты созданы"
+          },
+          "400" : {
+            "description" : "Неверные параметры",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "409" : {
+            "description" : "Карта уже существует",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Карты" ],
+        "summary" : "Обновление существующей карты",
+        "operationId" : "updateCards",
+        "description" : "Обновление существующей карты/карт в БД",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "CardItems",
+          "description" : "Обновляемая карта/карты",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/CardItem"
+            }, {
+              "$ref" : "#/definitions/CardItems"
+            } ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Карта обновлена"
           },
           "400" : {
             "description" : "Неверные параметры"
           },
-          "409" : {
-            "description" : "Карта уже существует"
+          "404" : {
+            "description" : "Карта не найдена"
           }
         }
       },
       "get" : {
-        "tags" : [ "data" ],
+        "tags" : [ "Карты" ],
         "summary" : "поиск карт",
         "operationId" : "searchCard",
         "description" : "Передав соответствующие параметры, вы можете искать карту в БД\n",
@@ -92,9 +133,9 @@
         }
       }
     },
-    "/cards/{CardId}" : {
+    "/data/cards/{CardId}" : {
       "get" : {
-        "tags" : [ "data" ],
+        "tags" : [ "Карты" ],
         "summary" : "Получение карты по ID",
         "description" : "Возвращает одну карту по её идентификатору",
         "operationId" : "getCardById",
@@ -197,17 +238,20 @@
         "begindate" : {
           "type" : "string",
           "format" : "date-time",
-          "example" : "2017-07-21T17:32:28Z"
+          "example" : "2017-07-21T17:32:28Z",
+          "description" : "дата и время активации"
         },
         "enddate" : {
           "type" : "string",
           "format" : "date-time",
-          "example" : "2019-07-21T17:32:28Z"
+          "example" : "2019-07-21T17:32:28Z",
+          "description" : "дата и время деактивации"
         },
         "turnover" : {
           "type" : "number",
           "format" : "double",
-          "example" : 12345.55
+          "example" : 12345.55,
+          "description" : "оборот по карте"
         },
         "lasttransaction" : {
           "type" : "string",
@@ -230,11 +274,13 @@
         },
         "reportperiodtype" : {
           "type" : "integer",
-          "example" : 0
+          "example" : 0,
+          "description" : "тип отчётного периода"
         },
         "reportperiodnum" : {
           "type" : "integer",
-          "example" : 1
+          "example" : 1,
+          "description" : "параметр отчётного периода"
         },
         "organization" : {
           "type" : "string",
@@ -265,6 +311,25 @@
         "excludereplication" : {
           "type" : "boolean",
           "example" : false
+        }
+      }
+    },
+    "CardItems" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/CardItem"
+      }
+    },
+    "Error" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "integer",
+          "example" : -1
+        },
+        "message" : {
+          "type" : "string",
+          "example" : "Неизвестная ошибка"
         }
       }
     }
