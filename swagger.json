@@ -208,6 +208,16 @@
           "type" : "number",
           "format" : "double",
           "example" : 12345.55
+        },
+        "lasttransaction" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "79dba956-ab60-4b6a-ba4c-3b2de8243675"
+        },
+        "lasttransactiondate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2019-05-20T17:32:28Z"
         }
       }
     }
