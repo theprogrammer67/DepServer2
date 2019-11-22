@@ -197,7 +197,8 @@
         "begindate" : {
           "type" : "string",
           "format" : "date-time",
-          "example" : "2017-07-21T17:32:28Z"
+          "example" : "2017-07-21T17:32:28Z",
+          "description" : "дата и время активации"
         },
         "enddate" : {
           "type" : "string",
