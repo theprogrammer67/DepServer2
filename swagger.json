@@ -33,7 +33,11 @@
           "name" : "CardItems",
           "description" : "Добавляемые карты",
           "schema" : {
-            "$ref" : "#/definitions/CardItems"
+            "allOf" : [ {
+              "$ref" : "#/definitions/CardItem"
+            }, {
+              "$ref" : "#/definitions/CardItems"
+            } ]
           }
         } ],
         "responses" : {
