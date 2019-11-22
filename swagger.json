@@ -13,16 +13,16 @@
     }
   },
   "tags" : [ {
-    "name" : "control",
+    "name" : "Управление",
     "description" : "Управление сервером"
   }, {
-    "name" : "data",
+    "name" : "Карты",
     "description" : "Операции с данными"
   } ],
   "paths" : {
     "/cards" : {
       "post" : {
-        "tags" : [ "data" ],
+        "tags" : [ "Карты" ],
         "summary" : "Добавление новой карты",
         "operationId" : "addCard",
         "description" : "Добавление новой карты в БД",
@@ -49,7 +49,7 @@
         }
       },
       "get" : {
-        "tags" : [ "data" ],
+        "tags" : [ "Карты" ],
         "summary" : "поиск карт",
         "operationId" : "searchCard",
         "description" : "Передав соответствующие параметры, вы можете искать карту в БД\n",
@@ -94,7 +94,7 @@
     },
     "/cards/{CardId}" : {
       "get" : {
-        "tags" : [ "data" ],
+        "tags" : [ "Карты" ],
         "summary" : "Получение карты по ID",
         "description" : "Возвращает одну карту по её идентификатору",
         "operationId" : "getCardById",
