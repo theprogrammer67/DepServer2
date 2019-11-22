@@ -1,0 +1,218 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Депозитно-дисконтный сервер. Ред. 2",
+    "version" : "2",
+    "title" : "Сервер ДДС",
+    "contact" : {
+      "email" : "stoi@rarus.ru"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags" : [ {
+    "name" : "control",
+    "description" : "Управление сервером"
+  }, {
+    "name" : "data",
+    "description" : "Операции с данными"
+  } ],
+  "paths" : {
+    "/cards" : {
+      "post" : {
+        "tags" : [ "data" ],
+        "summary" : "Добавление новой карты",
+        "operationId" : "addCard",
+        "description" : "Добавление новой карты в БД",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "CardItem",
+          "description" : "Добавляемая карта",
+          "schema" : {
+            "$ref" : "#/definitions/CardItem"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Карта создана"
+          },
+          "400" : {
+            "description" : "Неверные параметры"
+          },
+          "409" : {
+            "description" : "Карта уже существует"
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "поиск карт",
+        "operationId" : "searchCard",
+        "description" : "Передав соответствующие параметры, вы можете искать карту в БД\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "searchString",
+          "description" : "опциональная строка поиска",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "in" : "query",
+          "name" : "skip",
+          "description" : "число пропускаемых записей для пагинации",
+          "type" : "integer",
+          "format" : "int32",
+          "minimum" : 0
+        }, {
+          "in" : "query",
+          "name" : "limit",
+          "description" : "максимальное количество строк в выдаче",
+          "type" : "integer",
+          "format" : "int32",
+          "minimum" : 0,
+          "maximum" : 50
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Результаты поиска, удовлетворяющие условию",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CardItem"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
+    },
+    "/cards/{CardId}" : {
+      "get" : {
+        "tags" : [ "data" ],
+        "summary" : "Получение карты по ID",
+        "description" : "Возвращает одну карту по её идентификатору",
+        "operationId" : "getCardById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "CardId",
+          "in" : "path",
+          "description" : "ID карты",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ошибок нет",
+            "schema" : {
+              "$ref" : "#/definitions/CardItem"
+            }
+          },
+          "400" : {
+            "description" : "Неверный идентификатор карты"
+          },
+          "404" : {
+            "description" : "Карта не найдена"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "CardItem" : {
+      "type" : "object",
+      "required" : [ "id", "name", "description" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "183167cd-7ceb-476b-abc8-9e9ee139d482"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Тестовая карта"
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "Просто тестовая карта"
+        },
+        "master" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "ef348142-bb9e-11e5-a26b-5404a6b8123f"
+        },
+        "parent" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "95935461-e85a-482c-b7d2-e2a36bffa94d"
+        },
+        "group" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "code" : {
+          "type" : "string",
+          "example" : "1234-5678"
+        },
+        "customer" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "907b8286-fe97-4c33-9a41-d4733222d888"
+        },
+        "balanceflag" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "discountflag" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "blocked" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "blockdescription" : {
+          "type" : "string",
+          "example" : "За давностью лет"
+        },
+        "balance" : {
+          "type" : "number",
+          "format" : "double",
+          "example" : 100.55
+        },
+        "creditmax" : {
+          "type" : "number",
+          "format" : "double",
+          "example" : 1000.55
+        },
+        "actived" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "begindate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2017-07-21T17:32:28Z"
+        },
+        "enddate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2019-07-21T17:32:28Z"
+        },
+        "turnover" : {
+          "type" : "number",
+          "format" : "double",
+          "example" : 12345.55
+        }
+      }
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "schemes" : [ "https" ],
+  "basePath" : "/theprogrammer67/DepServer2/1.0.0"
+}
