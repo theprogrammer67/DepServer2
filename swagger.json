@@ -45,10 +45,16 @@
             "description" : "Карты созданы"
           },
           "400" : {
-            "description" : "Неверные параметры"
+            "description" : "Неверные параметры",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           },
           "409" : {
-            "description" : "Карта уже существует"
+            "description" : "Карта уже существует",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           }
         }
       },
@@ -312,6 +318,17 @@
       "type" : "array",
       "items" : {
         "$ref" : "#/definitions/CardItem"
+      }
+    },
+    "Error" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "integer"
+        },
+        "message" : {
+          "type" : "string"
+        }
       }
     }
   },
