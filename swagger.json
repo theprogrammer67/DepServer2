@@ -128,7 +128,10 @@
             }
           },
           "400" : {
-            "description" : "bad input parameter"
+            "description" : "Карты не найдены",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           }
         }
       }
