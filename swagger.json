@@ -92,7 +92,7 @@
       "get" : {
         "tags" : [ "Карты" ],
         "summary" : "поиск карт",
-        "operationId" : "searchCard",
+        "operationId" : "getCards",
         "description" : "Передав соответствующие параметры, вы можете искать карту в БД\n",
         "produces" : [ "application/json" ],
         "parameters" : [ {
