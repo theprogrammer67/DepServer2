@@ -79,13 +79,22 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "Карта обновлена"
+            "description" : "Карта обновлена",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           },
           "400" : {
-            "description" : "Неверные параметры"
+            "description" : "Неверные параметры",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           },
           "404" : {
-            "description" : "Карта не найдена"
+            "description" : "Карта не найдена",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           }
         }
       },
@@ -158,10 +167,16 @@
             }
           },
           "400" : {
-            "description" : "Неверный идентификатор карты"
+            "description" : "Неверный идентификатор карты",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           },
           "404" : {
-            "description" : "Карта не найдена"
+            "description" : "Карта не найдена",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           }
         }
       }
