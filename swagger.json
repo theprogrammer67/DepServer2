@@ -91,14 +91,14 @@
       },
       "get" : {
         "tags" : [ "Карты" ],
-        "summary" : "поиск карт",
+        "summary" : "получение списка карт",
         "operationId" : "getCards",
-        "description" : "Передав соответствующие параметры, вы можете искать карту в БД\n",
+        "description" : "Получение списка карт по родителю\n",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "query",
-          "name" : "searchString",
-          "description" : "опциональная строка поиска",
+          "name" : "parent",
+          "description" : "ID родительской группы",
           "required" : false,
           "type" : "string"
         }, {
