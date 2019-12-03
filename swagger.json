@@ -102,7 +102,7 @@
         "tags" : [ "Карты" ],
         "summary" : "получение списка карт",
         "operationId" : "getCards",
-        "description" : "Получение списка карт по родителю\n",
+        "description" : "Получение списка карт по родительской группы.\nЕсли родитель не указан, возвращаются карты корневой группы\n",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "query",
