@@ -143,6 +143,46 @@
             }
           }
         }
+      },
+      "delete" : {
+        "tags" : [ "Карты" ],
+        "summary" : "Удаление карты",
+        "operationId" : "deleteCards",
+        "description" : "Удаление карты/карт из БД",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "CardItems",
+          "description" : "Удаляемая карта/карты",
+          "schema" : {
+            "allOf" : [ {
+              "$ref" : "#/definitions/CardItem"
+            }, {
+              "$ref" : "#/definitions/CardItems"
+            } ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Карта удалена",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "400" : {
+            "description" : "Неверные параметры",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "404" : {
+            "description" : "Карта не найдена",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
       }
     },
     "/data/cards/{CardId}" : {
